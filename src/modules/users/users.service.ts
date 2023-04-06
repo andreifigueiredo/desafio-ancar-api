@@ -13,6 +13,10 @@ export class UsersService {
     return await this.userRepository.create<User>(user);
   }
 
+  async findOneByCpf(cpf: string): Promise<User> {
+    return await this.userRepository.findOne<User>({ where: { cpf } });
+  }
+
   async findOneById(id: number): Promise<User> {
     return await this.userRepository.findOne<User>({ where: { id } });
   }

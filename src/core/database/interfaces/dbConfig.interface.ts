@@ -6,6 +6,8 @@ export interface IDatabaseConfigAttributes {
   port?: number | string;
   dialect?: string;
   urlDatabase?: string;
+  autoLoadModels: boolean;
+  synchronize: boolean;
 }
 
 export interface IDatabaseConfig {

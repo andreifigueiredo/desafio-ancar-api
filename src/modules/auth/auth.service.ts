@@ -9,9 +9,8 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-  async validateUser(cpf: string, pass: string) {
-    // find if user exist with this email
-    const user = await this.userService.findOneByCpf(cpf);
+  async validateUser(username: string, pass: string) {
+    const user = await this.userService.findOneByCpf(username);
     if (!user) {
       return null;
     }
@@ -55,7 +54,7 @@ export class AuthService {
   }
 
   private async hashPassword(password) {
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 6);
     return hash;
   }
 

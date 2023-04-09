@@ -19,4 +19,10 @@ export class User extends Model<User> {
     allowNull: false,
   })
   cpf: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+  })
+  admin: boolean;
 }

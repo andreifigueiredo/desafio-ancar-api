@@ -5,24 +5,27 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
-  HasMany,
 } from 'sequelize-typescript';
-import { User } from '../users/user.entity';
 import { Question } from '../questions/question.entity';
+import { User } from '../users/user.entity';
 
 @Table
-export class Quiz extends Model<Quiz> {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  name: string;
-
+export class Answer extends Model<Answer> {
   @Column({
     type: DataType.TEXT,
     allowNull: false,
   })
   description: string;
+
+  @ForeignKey(() => Question)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  questionId: number;
+
+  @BelongsTo(() => Question)
+  question: Question;
 
   @ForeignKey(() => User)
   @Column({
@@ -33,9 +36,4 @@ export class Quiz extends Model<Quiz> {
 
   @BelongsTo(() => User)
   user: User;
-
-  @HasMany(() => Question, {
-    onDelete: 'CASCADE',
-  })
-  questions: Question[];
 }

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
-import { questionProviders } from './questions.provider';
+import { questionsProviders } from './questions.provider';
 
 @Module({
-  providers: [QuestionsService, ...questionProviders],
+  providers: [QuestionsService, ...questionsProviders],
 })
 export class QuestionsModule {}

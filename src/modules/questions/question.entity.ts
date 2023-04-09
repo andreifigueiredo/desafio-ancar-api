@@ -5,7 +5,9 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
+import { Answer } from '../answers/answer.entity';
 import { Quiz } from '../quizzes/quiz.entity';
 
 @Table
@@ -25,4 +27,9 @@ export class Question extends Model<Question> {
 
   @BelongsTo(() => Quiz)
   quiz: Quiz;
+
+  @HasMany(() => Answer, {
+    onDelete: 'CASCADE',
+  })
+  answers: Answer[];
 }

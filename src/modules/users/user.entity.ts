@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Quiz } from '../quizzes/quiz.entity';
 
 @Table
 export class User extends Model<User> {
@@ -25,4 +26,9 @@ export class User extends Model<User> {
     allowNull: false,
   })
   admin: boolean;
+
+  @HasMany(() => Quiz, {
+    onDelete: 'CASCADE',
+  })
+  quizzes: Quiz[];
 }

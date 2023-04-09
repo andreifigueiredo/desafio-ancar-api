@@ -10,10 +10,13 @@ import {
   Request,
   Patch,
 } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import { AuthGuard } from '@nestjs/passport';
 import { QuizzesService } from './quizzes.service';
 import { Quiz as QuizEntity } from '../quizzes/quiz.entity';
-import { QuizDto } from '../quizzes/dto/quiz.dto';
+import { QuizDto } from './dto/quiz.dto';
+import { QuizWithQuestionsDto } from './dto/quizWithQuestions.dto';
+import { QuestionDto } from '../questions/dto/question.dto';
 
 const doesNotExistMessage = "This Quiz doesn't exist";
 
@@ -41,8 +44,15 @@ export class QuizzesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() quiz: QuizDto, @Request() req): Promise<QuizEntity> {
-    return await this.quizService.create(quiz, req.user.id);
+  async create(
+    @Body() QuizWithQuestionsDto,
+    @Request() req,
+  ): Promise<QuizEntity> {
+    const quiz: QuizDto = plainToClass(QuizDto, QuizWithQuestionsDto);
+    const questions: QuestionDto[] = QuizWithQuestionsDto.questions.map(
+      (question) => plainToClass(QuestionDto, question),
+    );
+    return await this.quizService.create(quiz, questions, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))

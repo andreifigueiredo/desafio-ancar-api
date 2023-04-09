@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ANSWER_REPOSITORY } from 'src/core/constants';
+import { Question } from '../questions/question.entity';
 import { Answer } from './answer.entity';
 
 @Injectable()
@@ -18,6 +19,18 @@ export class AnswersService {
 
   async findAll(): Promise<Answer[]> {
     return await this.answerRepository.findAll<Answer>({});
+  }
+
+  async findAllByQuiz(id): Promise<Answer[]> {
+    return await this.answerRepository.findAll<Answer>({
+      include: [
+        {
+          model: Question,
+          attributes: [],
+          where: { quizId: id },
+        },
+      ],
+    });
   }
 
   async findOne(id): Promise<Answer> {

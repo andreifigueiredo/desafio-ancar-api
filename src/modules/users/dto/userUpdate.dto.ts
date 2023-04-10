@@ -16,8 +16,4 @@ export class UserUpdateDto {
   @IsOptional()
   @IsCPF()
   readonly cpf: string;
-
-  @ApiProperty()
-  @IsOptional()
-  readonly admin: boolean;
 }

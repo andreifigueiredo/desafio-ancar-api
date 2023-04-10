@@ -21,12 +21,6 @@ export class User extends Model<User> {
   })
   cpf: string;
 
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-  })
-  admin: boolean;
-
   @HasMany(() => Quiz, {
     onDelete: 'CASCADE',
   })

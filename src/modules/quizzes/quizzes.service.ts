@@ -3,8 +3,9 @@ import { Quiz } from './quiz.entity';
 import { Question } from '../questions/question.entity';
 import { QuizDto } from './dto/quiz.dto';
 import { QUIZ_REPOSITORY } from '../../core/constants';
-import { QuestionDto } from '../questions/dto/question.dto';
 import { QuestionsService } from '../questions/questions.service';
+import { QuizWithQuestionsDto } from './dto/quizWithQuestions.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class QuizzesService {
@@ -14,10 +15,11 @@ export class QuizzesService {
     private readonly questionService: QuestionsService,
   ) {}
 
-  async create(quiz: QuizDto, questions: QuestionDto[], userId): Promise<Quiz> {
+  async create(quizWithQuestion: QuizWithQuestionsDto, userId): Promise<Quiz> {
+    const quiz: QuizDto = plainToClass(QuizDto, quizWithQuestion);
     const newQuiz = await this.quizRepository.create<Quiz>({ ...quiz, userId });
 
-    for (const question of questions) {
+    for (const question of quizWithQuestion.questions) {
       await this.questionService.create(question, newQuiz.id);
     }
     return newQuiz;
@@ -29,26 +31,28 @@ export class QuizzesService {
     });
   }
 
-  async findOne(id): Promise<Quiz> {
-    return await this.quizRepository.findOne({
-      where: { id },
-      include: [{ model: Question }],
-    });
-  }
-
   async delete(id, userId) {
     return await this.quizRepository.destroy({ where: { id, userId } });
   }
 
-  async update(id, data, userId) {
+  async update(id, quizWithQuestion, userId) {
+    const quiz: QuizDto = plainToClass(QuizDto, quizWithQuestion);
     const [numberOfAffectedRows, [updatedQuiz]] =
       await this.quizRepository.update(
-        { ...data },
+        { ...quiz },
         {
           where: { id, userId },
           returning: true,
         },
       );
+
+    for (const question of quizWithQuestion.questions) {
+      if (question?.id) {
+        await this.questionService.update(question.id, { ...question });
+      } else {
+        await this.questionService.create(question, id);
+      }
+    }
 
     return { numberOfAffectedRows, updatedQuiz };
   }

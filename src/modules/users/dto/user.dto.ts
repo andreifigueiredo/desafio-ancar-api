@@ -1,4 +1,4 @@
-import { IsNotEmpty, MinLength, IsOptional } from 'class-validator';
+import { IsNotEmpty, MinLength } from 'class-validator';
 import { IsCPF } from 'brazilian-class-validator';
 
 export class UserDto {
@@ -12,20 +12,4 @@ export class UserDto {
   @IsNotEmpty()
   @IsCPF()
   readonly cpf: string;
-}
-
-export class UserUpdateDto {
-  @IsOptional()
-  readonly name: string;
-
-  @IsOptional()
-  @MinLength(6)
-  readonly password: string;
-
-  @IsOptional()
-  @IsCPF()
-  readonly cpf: string;
-
-  @IsOptional()
-  readonly admin: boolean;
 }

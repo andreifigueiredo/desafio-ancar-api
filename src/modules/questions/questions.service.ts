@@ -20,4 +20,19 @@ export class QuestionsService {
   async findAll(): Promise<Question[]> {
     return await this.questionRepository.findAll<Question>({});
   }
+
+  async update(id, data) {
+    console.log('----------', id);
+    console.log('----------', data);
+    const [numberOfAffectedRows, [updatedQuestion]] =
+      await this.questionRepository.update(
+        { ...data },
+        {
+          where: { id },
+          returning: true,
+        },
+      );
+
+    return { numberOfAffectedRows, updatedQuestion };
+  }
 }

@@ -7,13 +7,13 @@ import {
   Body,
   NotFoundException,
   UseGuards,
-  Request,
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { User as UserEntity } from '../users/user.entity';
-import { UserDto, UserUpdateDto } from './dto/user.dto';
+import { UserDto } from './dto/user.dto';
+import { UserUpdateDto } from './dto/userUpdate.dto';
 
 const doesNotExistMessage = "This User doesn't exist";
 

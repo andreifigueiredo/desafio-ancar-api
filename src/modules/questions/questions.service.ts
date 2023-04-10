@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Question } from './question.entity';
 import { QUESTION_REPOSITORY } from 'src/core/constants';
-import { QuestionDto } from './dto/question.dto';
+import { QuestionCreateDto } from './dto/questionCreate.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -10,7 +10,7 @@ export class QuestionsService {
     private readonly questionRepository: typeof Question,
   ) {}
 
-  async create(question: QuestionDto, quizId): Promise<Question> {
+  async create(question: QuestionCreateDto, quizId): Promise<Question> {
     return await this.questionRepository.create<Question>({
       ...question,
       quizId,
@@ -22,8 +22,6 @@ export class QuestionsService {
   }
 
   async update(id, data) {
-    console.log('----------', id);
-    console.log('----------', data);
     const [numberOfAffectedRows, [updatedQuestion]] =
       await this.questionRepository.update(
         { ...data },

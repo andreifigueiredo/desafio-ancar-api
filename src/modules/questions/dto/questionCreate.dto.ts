@@ -1,10 +1,12 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import internal from 'stream';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class QuestionDto {
+export class QuestionCreateDto {
+  @ApiProperty()
   @IsOptional()
   readonly id: number;
 
+  @ApiProperty()
   @IsNotEmpty()
   readonly description: string;
 }

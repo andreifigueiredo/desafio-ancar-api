@@ -11,14 +11,16 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { QuizzesService } from './quizzes.service';
 import { Quiz as QuizEntity } from '../quizzes/quiz.entity';
-import { QuizDto } from './dto/quiz.dto';
-import { QuizWithQuestionsDto } from './dto/quizWithQuestions.dto';
+import { QuizWithQuestionsCreateDto } from './dto/quizWithQuestionsCreate.dto';
+import { QuizWithQuestionsUpdateDto } from './dto/quizWithQuestionsUpdate.dto';
 
 const doesNotExistMessage = "This Quiz doesn't exist";
 
 @Controller('quizzes')
+@ApiTags('quizzes')
 export class QuizzesController {
   constructor(private readonly quizService: QuizzesService) {}
 
@@ -31,23 +33,22 @@ export class QuizzesController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @Body() quizWithQuestionsDto: QuizWithQuestionsDto,
+    @Body() quizWithQuestions: QuizWithQuestionsCreateDto,
     @Request() req,
   ): Promise<QuizEntity> {
-    return await this.quizService.create(quizWithQuestionsDto, req.user.id);
+    return await this.quizService.create(quizWithQuestions, req.user.id);
   }
 
-  // todo: fix these code
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(
     @Param('id') id: number,
-    @Body() quizWithQuestionsDto: QuizWithQuestionsDto,
+    @Body() quizWithQuestions: QuizWithQuestionsUpdateDto,
     @Request() req,
   ): Promise<QuizEntity> {
     const { numberOfAffectedRows, updatedQuiz } = await this.quizService.update(
       id,
-      quizWithQuestionsDto,
+      quizWithQuestions,
       req.user.id,
     );
 

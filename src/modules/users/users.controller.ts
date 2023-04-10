@@ -10,14 +10,16 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User as UserEntity } from '../users/user.entity';
-import { UserDto } from './dto/user.dto';
+import { UserCreateDto } from './dto/userCreate.dto';
 import { UserUpdateDto } from './dto/userUpdate.dto';
 
 const doesNotExistMessage = "This User doesn't exist";
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
@@ -41,10 +43,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(
-    @Body() user: UserDto,
-    // @Request() req
-  ): Promise<UserEntity> {
+  async create(@Body() user: UserCreateDto): Promise<UserEntity> {
     return await this.userService.create(user);
   }
 

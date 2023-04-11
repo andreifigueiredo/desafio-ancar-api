@@ -3,11 +3,7 @@ import { IsCPF } from 'brazilian-class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
-export class UserCreateDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  readonly name: string;
-
+export class LoginDto {
   @ApiProperty()
   @IsNotEmpty()
   @MinLength(6)
@@ -17,5 +13,5 @@ export class UserCreateDto {
   @IsNotEmpty()
   @IsCPF()
   @Transform(({ value }) => value.replace(/\D/g, ''))
-  readonly cpf: string;
+  readonly username: string;
 }

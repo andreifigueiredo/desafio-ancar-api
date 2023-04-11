@@ -9,6 +9,12 @@ export class UsersService {
     @Inject(USER_REPOSITORY) private readonly userRepository: typeof User,
   ) {}
 
+  cleanCpf(cpf: string): string {
+    const numbersOnly = cpf.replace(/\D/g, '');
+
+    return numbersOnly;
+  }
+
   async findAll(page = 1, limit = 10): Promise<User[]> {
     const offset = (page - 1) * limit;
 

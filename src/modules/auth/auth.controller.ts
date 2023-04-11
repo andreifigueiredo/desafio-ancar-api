@@ -2,8 +2,9 @@ import { Controller, Body, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { UserCreateDto } from '../users/dto/userCreate.dto';
 import { DoesUserExist } from '../../core/guards/doesUserExist.guard';
+import { UserCreateDto } from '../users/dto/userCreate.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -12,8 +13,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req) {
-    return await this.authService.login(req.user);
+  async login(@Body() credentials: LoginDto) {
+    return await this.authService.login(credentials);
   }
 
   @UseGuards(DoesUserExist)

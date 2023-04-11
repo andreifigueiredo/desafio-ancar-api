@@ -1,6 +1,7 @@
 import { MinLength, IsOptional } from 'class-validator';
 import { IsCPF } from 'brazilian-class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class UserUpdateDto {
   @ApiProperty()
@@ -15,5 +16,6 @@ export class UserUpdateDto {
   @ApiProperty()
   @IsOptional()
   @IsCPF()
+  @Transform(({ value }) => value.replace(/\D/g, ''))
   readonly cpf: string;
 }

@@ -8,6 +8,7 @@ import {
   NotFoundException,
   UseGuards,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -26,8 +27,8 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Get()
-  async findAll() {
-    return await this.userService.findAll();
+  async findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return await this.userService.findAll(page, limit);
   }
 
   @UseGuards(AuthGuard('jwt'))

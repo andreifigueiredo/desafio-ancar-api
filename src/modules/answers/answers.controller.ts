@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -26,8 +27,12 @@ export class AnswersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Get(':id/answers')
-  async findAllAnswers(@Param('id') id: number) {
-    const answers = await this.answerService.findAllByQuestion(id);
+  async findAllAnswers(
+    @Param('id') id: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const answers = await this.answerService.findAllByQuestion(id, page, limit);
 
     return answers;
   }

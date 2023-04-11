@@ -17,19 +17,13 @@ export class AnswersService {
     });
   }
 
-  async findAll(): Promise<Answer[]> {
-    return await this.answerRepository.findAll<Answer>({});
-  }
+  async findAllByQuestion(id, page = 1, limit = 10): Promise<Answer[]> {
+    const offset = (page - 1) * limit;
 
-  async findAllByQuestion(id): Promise<Answer[]> {
     return await this.answerRepository.findAll<Answer>({
       where: { questionId: id },
-    });
-  }
-
-  async findOne(id): Promise<Answer> {
-    return await this.answerRepository.findOne({
-      where: { id },
+      offset,
+      limit,
     });
   }
 

@@ -30,9 +30,13 @@ export class QuizzesService {
     return newQuiz;
   }
 
-  async findAll(): Promise<Quiz[]> {
+  async findAll(page = 1, limit = 10): Promise<Quiz[]> {
+    const offset = (page - 1) * limit;
+
     return await this.quizRepository.findAll<Quiz>({
       include: [{ model: Question }],
+      offset,
+      limit,
     });
   }
 

@@ -9,9 +9,13 @@ export class UsersService {
     @Inject(USER_REPOSITORY) private readonly userRepository: typeof User,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll(page = 1, limit = 10): Promise<User[]> {
+    const offset = (page - 1) * limit;
+
     return await this.userRepository.findAll<User>({
       attributes: { exclude: ['password'] },
+      offset,
+      limit,
     });
   }
 

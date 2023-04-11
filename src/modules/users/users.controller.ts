@@ -57,12 +57,7 @@ export class UsersController {
   async update(
     @Param('id') id: number,
     @Body() user: UserUpdateDto,
-    // @Request() req,
   ): Promise<UserEntity> {
-    // if (id != req.user.id) {
-    //   throw new NotFoundException("You can't update other user");
-    // }
-
     const { numberOfAffectedRows, updatedUser } = await this.userService.update(
       id,
       user,
@@ -78,14 +73,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @Delete(':id')
-  async remove(
-    @Param('id') id: number,
-    // @Request() req
-  ) {
-    // if (id != req.user.id) {
-    //   throw new NotFoundException("You can't delete other user");
-    // }
-
+  async remove(@Param('id') id: number) {
     const deleted = await this.userService.delete(id);
 
     if (deleted === 0) {

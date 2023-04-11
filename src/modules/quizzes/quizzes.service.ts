@@ -16,7 +16,6 @@ export class QuizzesService {
     private readonly questionService: QuestionsService,
   ) {}
 
-  // TODO: add return quiz questions
   async create(
     quizWithQuestions: QuizWithQuestionsCreateDto,
     userId,
@@ -44,7 +43,6 @@ export class QuizzesService {
     return await this.quizRepository.destroy({ where: { id, userId } });
   }
 
-  // TODO: add return quiz questions
   async update(id, quizWithQuestions, userId) {
     const quiz: QuizUpdateDto = plainToClass(QuizUpdateDto, quizWithQuestions);
     const [numberOfAffectedRows, [updatedQuiz]] =

@@ -10,7 +10,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User as UserEntity } from '../users/user.entity';
 import { UserCreateDto } from './dto/userCreate.dto';
@@ -24,12 +24,14 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Get()
   async findAll() {
     return await this.userService.findAll();
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<UserEntity> {
     const user = await this.userService.findOne(id);
@@ -42,12 +44,14 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Post()
   async create(@Body() user: UserCreateDto): Promise<UserEntity> {
     return await this.userService.create(user);
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -71,6 +75,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(
     @Param('id') id: number,

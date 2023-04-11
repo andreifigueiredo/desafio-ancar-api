@@ -11,7 +11,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { QuizzesService } from './quizzes.service';
 import { Quiz as QuizEntity } from '../quizzes/quiz.entity';
 import { QuizWithQuestionsCreateDto } from './dto/quizWithQuestionsCreate.dto';
@@ -25,12 +25,14 @@ export class QuizzesController {
   constructor(private readonly quizService: QuizzesService) {}
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Get()
   async findAll() {
     return await this.quizService.findAll();
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Post()
   async create(
     @Body() quizWithQuestions: QuizWithQuestionsCreateDto,
@@ -40,6 +42,7 @@ export class QuizzesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -60,6 +63,7 @@ export class QuizzesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: number, @Request() req) {
     const deleted = await this.quizService.delete(id, req.user.id);

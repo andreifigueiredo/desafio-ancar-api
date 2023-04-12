@@ -27,14 +27,22 @@ export class QuizzesService {
     return newQuiz;
   }
 
-  async findAll(page = 1, limit = 10): Promise<Quiz[]> {
+  async findAll(
+    page = 1,
+    limit = 10,
+  ): Promise<{ rows: Quiz[]; count: number }> {
     const offset = (page - 1) * limit;
 
-    return await this.quizRepository.findAll<Quiz>({
-      include: [{ model: Question }],
-      offset,
-      limit,
-    });
+    const [rows, count] = await Promise.all([
+      this.quizRepository.findAll<Quiz>({
+        include: [{ model: Question }],
+        offset,
+        limit,
+      }),
+      this.quizRepository.count(),
+    ]);
+
+    return { rows, count };
   }
 
   async findOne(id: number, options?: FindOptions): Promise<Quiz> {

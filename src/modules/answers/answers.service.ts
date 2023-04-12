@@ -15,6 +15,7 @@ export class AnswersService {
   ) {}
 
   async create(answers: AnswerCreateDto[], userId): Promise<Answer[]> {
+    console.log('-------------answers', answers);
     const createdAnswers = [];
     for (const answer of answers) {
       createdAnswers.push(

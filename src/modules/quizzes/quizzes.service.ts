@@ -55,6 +55,8 @@ export class QuizzesService {
 
   async update(id, quizWithQuestions) {
     const quiz: QuizUpdateDto = plainToClass(QuizUpdateDto, quizWithQuestions);
+    console.log('----------', quizWithQuestions);
+
     const [numberOfAffectedRows, [updatedQuiz]] =
       await this.quizRepository.update(
         { ...quiz },
@@ -69,11 +71,7 @@ export class QuizzesService {
     }
 
     for (const question of quizWithQuestions.questions) {
-      if (question?.id) {
-        await this.questionService.update(question.id, { ...question });
-      } else {
-        await this.questionService.create(question, id);
-      }
+      await this.questionService.update(question.id, { ...question });
     }
 
     return { numberOfAffectedRows, updatedQuiz };

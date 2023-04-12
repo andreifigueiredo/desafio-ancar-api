@@ -61,26 +61,17 @@ export class AnswersService {
     const updatedAnswers = [];
     let numberOfAffectedAnswersRows = 0;
     for (const answer of answers) {
-      if (answer?.id) {
-        const [numberOfAffectedRows, [updatedAnswer]] =
-          await this.answerRepository.update(
-            { ...answer },
-            {
-              where: { id: answer.id },
-              returning: true,
-            },
-          );
+      const [numberOfAffectedRows, [updatedAnswer]] =
+        await this.answerRepository.update(
+          { ...answer },
+          {
+            where: { id: answer.id, userId },
+            returning: true,
+          },
+        );
 
-        updatedAnswers.push(updatedAnswer);
-        numberOfAffectedAnswersRows += numberOfAffectedRows;
-      } else {
-        const newAnswer = await this.answerRepository.create({
-          ...answer,
-          userId,
-        });
-        updatedAnswers.push(newAnswer);
-        numberOfAffectedAnswersRows += 1;
-      }
+      updatedAnswers.push(updatedAnswer);
+      numberOfAffectedAnswersRows += numberOfAffectedRows;
     }
 
     return { numberOfAffectedAnswersRows, updatedAnswers };

@@ -3,6 +3,7 @@ import {
   MinLength,
   ValidateNested,
   IsArray,
+  ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -19,7 +20,7 @@ export class QuizWithQuestionsCreateDto {
   readonly description: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @ArrayMinSize(1)
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => QuestionCreateDto)

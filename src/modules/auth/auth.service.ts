@@ -33,10 +33,12 @@ export class AuthService {
   }
 
   public async create(user) {
+    const cpf = user.cpf.replace(/\D/g, '');
     const pass = await this.hashPassword(user.password);
 
     const newUser = await this.userService.create({
       ...user,
+      cpf,
       password: pass,
     });
 

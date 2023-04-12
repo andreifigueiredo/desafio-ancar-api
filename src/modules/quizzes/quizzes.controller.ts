@@ -18,42 +18,44 @@ import { Quiz as QuizEntity } from '../quizzes/quiz.entity';
 import { QuizWithQuestionsCreateDto } from './dto/quizWithQuestionsCreate.dto';
 import { QuizWithQuestionsUpdateDto } from './dto/quizWithQuestionsUpdate.dto';
 
-const doesNotExistMessage = "This Quiz doesn't exist";
+const doesNotExistMessage = 'Esse Questionário não existe';
 
 @Controller('quizzes')
 @ApiTags('quizzes')
 export class QuizzesController {
   constructor(private readonly quizService: QuizzesService) {}
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @Get()
   async findAll(@Query('page') page: number, @Query('limit') limit: number) {
     return await this.quizService.findAll(page, limit);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<QuizEntity> {
+    const quiz = await this.quizService.findOne(id);
+
+    if (!quiz) {
+      throw new NotFoundException(doesNotExistMessage);
+    }
+
+    return quiz;
+  }
+
   @Post()
   async create(
     @Body() quizWithQuestions: QuizWithQuestionsCreateDto,
-    @Request() req,
   ): Promise<QuizEntity> {
-    return await this.quizService.create(quizWithQuestions, req.user.id);
+    return await this.quizService.create(quizWithQuestions);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() quizWithQuestions: QuizWithQuestionsUpdateDto,
-    @Request() req,
   ): Promise<QuizEntity> {
     const { numberOfAffectedRows, updatedQuiz } = await this.quizService.update(
       id,
       quizWithQuestions,
-      req.user.id,
     );
 
     if (numberOfAffectedRows === 0) {
@@ -63,11 +65,9 @@ export class QuizzesController {
     return updatedQuiz;
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
   @Delete(':id')
-  async remove(@Param('id') id: number, @Request() req) {
-    const deleted = await this.quizService.delete(id, req.user.id);
+  async remove(@Param('id') id: number) {
+    const deleted = await this.quizService.delete(id);
 
     if (deleted === 0) {
       throw new NotFoundException(doesNotExistMessage);

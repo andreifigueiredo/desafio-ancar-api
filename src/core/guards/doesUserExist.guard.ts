@@ -19,9 +19,11 @@ export class DoesUserExist implements CanActivate {
   }
 
   async validateRequest(request) {
-    const userExist = await this.userService.findOneByCpf(request.body.cpf);
+    const userExist = await this.userService.findOneByCpf(
+      request.body.cpf.replace(/\D/g, ''),
+    );
     if (userExist) {
-      throw new ForbiddenException('This cpf already exist');
+      throw new ForbiddenException('Esse cpf já existe!');
     }
     return true;
   }

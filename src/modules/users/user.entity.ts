@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-import { Quiz } from '../quizzes/quiz.entity';
+import { Answer } from '../answers/answer.entity';
 
 @Table
 export class User extends Model<User> {
@@ -21,8 +21,8 @@ export class User extends Model<User> {
   })
   cpf: string;
 
-  @HasMany(() => Quiz, {
+  @HasMany(() => Answer, {
     onDelete: 'CASCADE',
   })
-  quizzes: Quiz[];
+  answers: Answer[];
 }

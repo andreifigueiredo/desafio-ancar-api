@@ -16,12 +16,9 @@ export class QuizzesService {
     private readonly questionService: QuestionsService,
   ) {}
 
-  async create(
-    quizWithQuestions: QuizWithQuestionsCreateDto,
-    userId,
-  ): Promise<Quiz> {
+  async create(quizWithQuestions: QuizWithQuestionsCreateDto): Promise<Quiz> {
     const quiz: QuizCreateDto = plainToClass(QuizCreateDto, quizWithQuestions);
-    const newQuiz = await this.quizRepository.create<Quiz>({ ...quiz, userId });
+    const newQuiz = await this.quizRepository.create<Quiz>({ ...quiz });
 
     for (const question of quizWithQuestions.questions) {
       await this.questionService.create(question, newQuiz.id);
@@ -39,17 +36,24 @@ export class QuizzesService {
     });
   }
 
-  async delete(id, userId) {
-    return await this.quizRepository.destroy({ where: { id, userId } });
+  async findOne(id): Promise<Quiz> {
+    return await this.quizRepository.findOne({
+      where: { id },
+      include: [{ model: Question }],
+    });
   }
 
-  async update(id, quizWithQuestions, userId) {
+  async delete(id) {
+    return await this.quizRepository.destroy({ where: { id } });
+  }
+
+  async update(id, quizWithQuestions) {
     const quiz: QuizUpdateDto = plainToClass(QuizUpdateDto, quizWithQuestions);
     const [numberOfAffectedRows, [updatedQuiz]] =
       await this.quizRepository.update(
         { ...quiz },
         {
-          where: { id, userId },
+          where: { id },
           returning: true,
         },
       );

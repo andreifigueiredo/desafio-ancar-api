@@ -47,7 +47,6 @@ export class AnswersController {
   @ApiBearerAuth()
   @Post(':id/answers')
   async create(
-    @Param('id') id: number,
     @Body() answers: AnswerCreateDto[],
     @Request() req,
   ): Promise<AnswerEntity[]> {
@@ -58,7 +57,6 @@ export class AnswersController {
   @ApiBearerAuth()
   @Patch(':id/answers')
   async update(
-    @Param('id') id: number,
     @Body() answers: AnswerCreateDto[],
     @Request() req,
   ): Promise<AnswerEntity[]> {

@@ -19,8 +19,8 @@ import { AnswerCreateDto } from './dto/answerCreate.dto';
 
 const doesNotExistMessage = 'Resposta não encontrada';
 
-@Controller('questions')
-@ApiTags('questions')
+@Controller('quizzes')
+@ApiTags('quizzes')
 export class AnswersController {
   constructor(private readonly answerService: AnswersService) {}
 
@@ -31,10 +31,16 @@ export class AnswersController {
     @Param('id') id: number,
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Request() req,
   ) {
-    const answers = await this.answerService.findAllByQuestion(id, page, limit);
+    const quiz = await this.answerService.findAllByQuiz(
+      id,
+      req.user.id,
+      page,
+      limit,
+    );
 
-    return answers;
+    return quiz;
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -42,28 +48,28 @@ export class AnswersController {
   @Post(':id/answers')
   async create(
     @Param('id') id: number,
-    @Body() answer: AnswerCreateDto,
+    @Body() answers: AnswerCreateDto[],
     @Request() req,
-  ): Promise<AnswerEntity> {
-    return await this.answerService.create(id, answer, req.user.id);
+  ): Promise<AnswerEntity[]> {
+    return await this.answerService.create(answers, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @Patch(':id/answers/:answerId')
+  @Patch(':id/answers')
   async update(
-    @Param('answerId') id: number,
-    @Body() answer: AnswerCreateDto,
+    @Param('id') id: number,
+    @Body() answers: AnswerCreateDto[],
     @Request() req,
-  ): Promise<AnswerEntity> {
-    const { numberOfAffectedRows, updatedAnswer } =
-      await this.answerService.update(id, answer, req.user.id);
+  ): Promise<AnswerEntity[]> {
+    const { numberOfAffectedAnswersRows, updatedAnswers } =
+      await this.answerService.update(answers, req.user.id);
 
-    if (numberOfAffectedRows === 0) {
+    if (numberOfAffectedAnswersRows === 0) {
       throw new NotFoundException(doesNotExistMessage);
     }
 
-    return updatedAnswer;
+    return updatedAnswers;
   }
 
   @UseGuards(AuthGuard('jwt'))

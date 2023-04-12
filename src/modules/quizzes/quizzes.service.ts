@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { FindOptions } from 'sequelize';
 import { plainToClass } from 'class-transformer';
 import { Quiz } from './quiz.entity';
 import { Question } from '../questions/question.entity';
@@ -36,10 +37,15 @@ export class QuizzesService {
     });
   }
 
-  async findOne(id): Promise<Quiz> {
+  async findOne(id: number, options?: FindOptions): Promise<Quiz> {
+    if (!options) {
+      options = {
+        include: [{ model: Question }],
+      };
+    }
     return await this.quizRepository.findOne({
       where: { id },
-      include: [{ model: Question }],
+      ...options,
     });
   }
 

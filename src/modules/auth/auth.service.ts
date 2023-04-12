@@ -10,7 +10,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async validateUser(username: string, pass: string) {
-    const user = await this.userService.findOneByCpf(username);
+    const user = await this.userService.findOneByCpf(
+      username.replace(/\D/g, ''),
+    );
     if (!user) {
       return null;
     }
@@ -36,7 +38,6 @@ export class AuthService {
     const newUser = await this.userService.create({
       ...user,
       password: pass,
-      admin: true,
     });
 
     // tslint:disable-next-line: no-string-literal

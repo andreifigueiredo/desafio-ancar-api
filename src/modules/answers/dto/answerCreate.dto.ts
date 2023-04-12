@@ -5,4 +5,8 @@ export class AnswerCreateDto {
   @ApiProperty()
   @IsNotEmpty()
   readonly description: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  readonly questionId: number;
 }
